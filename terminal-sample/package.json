@@ -78,7 +78,7 @@
 			},
 			{
 				"command": "terminalTest.processId",
-				"title": "Terminal API: Get process ID"
+				"title": "Terminal API: Get process ID (weird)"
 			},
 			{
 				"command": "terminalTest.sendText",

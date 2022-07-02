@@ -1,5 +1,7 @@
 {
 	"editor.insertSpaces": false,
+	"remote.containers.logLevel":"trace",
+
 	"workbench.colorCustomizations": {
 		"terminal.ansiBlack": "#090300",
 		"terminal.ansiBlue": "#01A0E4",

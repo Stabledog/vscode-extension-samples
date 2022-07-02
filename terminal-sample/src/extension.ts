@@ -22,8 +22,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// vscode.window.createTerminal
 	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createTerminal', () => {
-		vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`);
-		vscode.window.showInformationMessage('Hello World 2!');
+		const msg=`Ext Terminal #${NEXT_TERM_ID++}`;
+		const term:vscode.Terminal = vscode.window.createTerminal(msg);
+		vscode.window.showInformationMessage(`Created ${msg}`);
+		//term.show(false);
 	}));
 	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createTerminalHideFromUser', () => {
 		vscode.window.createTerminal({
@@ -84,7 +86,7 @@ export function activate(context: vscode.ExtensionContext) {
 		if (ensureTerminalExists()) {
 			selectTerminal().then(terminal => {
 				if (terminal) {
-					terminal.sendText("echo 'Hello world!'", false);
+					terminal.sendText("history", false);
 				}
 			});
 		}
