@@ -6,7 +6,6 @@
 import {
 	createConnection,
 	TextDocuments,
-	TextDocument,
 	Diagnostic,
 	DiagnosticSeverity,
 	ProposedFeatures,
@@ -14,16 +13,19 @@ import {
 	DidChangeConfigurationNotification,
 	CompletionItem,
 	CompletionItemKind,
-	TextDocumentPositionParams
-} from 'vscode-languageserver';
+	TextDocumentPositionParams,
+	TextDocumentSyncKind
+} from 'vscode-languageserver/node';
+
+import {
+	TextDocument
+} from 'vscode-languageserver-textdocument';
 
 // Create a connection for the server. The connection uses Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
 const connection = createConnection(ProposedFeatures.all);
 
-// Create a simple text document manager. The text document manager
-// supports full document sync only
-const documents: TextDocuments = new TextDocuments();
+const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
@@ -45,7 +47,7 @@ connection.onInitialize((params: InitializeParams) => {
 
 	return {
 		capabilities: {
-			textDocumentSync: documents.syncKind,
+			textDocumentSync: TextDocumentSyncKind.Incremental,
 			// Tell the client that the server supports code completion
 			completionProvider: {
 				resolveProvider: true
@@ -136,7 +138,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 	const diagnostics: Diagnostic[] = [];
 	while ((m = pattern.exec(text)) && problems < settings.maxNumberOfProblems) {
 		problems++;
-		const diagnosic: Diagnostic = {
+		const diagnostic: Diagnostic = {
 			severity: DiagnosticSeverity.Warning,
 			range: {
 				start: textDocument.positionAt(m.index),
@@ -146,24 +148,24 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 			source: 'ex'
 		};
 		if (hasDiagnosticRelatedInformationCapability) {
-			diagnosic.relatedInformation = [
+			diagnostic.relatedInformation = [
 				{
 					location: {
 						uri: textDocument.uri,
-						range: Object.assign({}, diagnosic.range)
+						range: Object.assign({}, diagnostic.range)
 					},
 					message: 'Spelling matters'
 				},
 				{
 					location: {
 						uri: textDocument.uri,
-						range: Object.assign({}, diagnosic.range)
+						range: Object.assign({}, diagnostic.range)
 					},
 					message: 'Particularly for names'
 				}
 			];
 		}
-		diagnostics.push(diagnosic);
+		diagnostics.push(diagnostic);
 	}
 
 	// Send the computed diagnostics to VSCode.

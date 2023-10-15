@@ -1,28 +1,23 @@
 # notebook-renderer-sample
 
-⚠️ Work-in-progress starter code for custom notebook renderers in VS Code. Expect this to change as notebooks matures. ⚠️
+Demonstrates a custom [notebook renderer](https://code.visualstudio.com/api/extension-guides/notebook#notebook-renderer) in VS Code. This creates a custom renderer called `GitHub Issues Plain Renderer` that renders output in a [GitHub Issues Notebook](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-github-issue-notebooks).
 
 This starter includes:
 
- - 🖥️ TypeScript code to create a simple `NotebookOutputRenderer`
- - 📦 A Webpack build for renderer client code
- - ⚡ Support for hot module reloading and safe boilerplate
- - 🎨 CSS modules support
+- 🖥️ TypeScript code to create a simple `NotebookOutputRenderer`
+- 📦 A Webpack build for the renderer
+- 🎨 CSS modules support
 
-### Running this Sample
+## Running this Sample
+
+Ensure you have a Python installed to actually run the sample and invoke the renderer.
 
  1. `cd notebook-renderer-sample`
- 1. `code-insiders .`: Open the folder in VS Code Insiders
+ 1. `code .`: Open the folder in VS Code Insiders
  1. Hit `F5` to build+debug
+ 1. Run the sample notebook
+ 1. Switch the output rendering by clicking [...] button next to the cell output and then _Change Presentation_
 
-### Structure
+When you select the `x-application/github-issues`, the custom renderer will be invoked.
 
-A Notebook Renderer consists of code that runs in the VS Code Extension Host (Node.js), which registers the renderer and passes data into the UI code running inside a WebView (Browser/DOM).
-
-This uses TypeScript project references. There are three projects in the `src` directory:
-
- - `extension` contains the code running in Node.js extension host. It's compiled with `tsc`.
- - `client` is the UI code, built by Webpack, with access to the DOM.
- - `common` contains code shared between the extension and client.
-
-When you run `watch`, `compile`, or `dev`, we invoke both `tsc` and `webpack` to compile the extension and the client portion of the code.
+![Notebook cell output renderer demo](notebook-renderer-sample.gif)

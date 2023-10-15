@@ -1,5 +1,5 @@
-import * as vscode from 'vscode';
 import * as path from 'path';
+import * as vscode from 'vscode';
 
 const uriListMime = 'text/uri-list';
 
@@ -7,17 +7,17 @@ const uriListMime = 'text/uri-list';
  * Provider that reverses dropped text.
  * 
  * Note this does not apply to text that is drag and dropped with-in the current editor,
- * only for text dropped from external apps.
+ * only for text dropped from external apps. 
  */
-class ReverseTextOnDropProvider implements vscode.DocumentOnDropEditProvider {
-	async provideDocumentOnDropEdits(
+class ReverseTextOnDropProvider implements vscode.DocumentDropEditProvider {
+	async provideDocumentDropEdits(
 		_document: vscode.TextDocument,
 		position: vscode.Position,
 		dataTransfer: vscode.DataTransfer,
 		token: vscode.CancellationToken
 	): Promise<vscode.DocumentDropEdit | undefined> {
 		// Check the data transfer to see if we have some kind of text data
-		const dataTransferItem = dataTransfer.get('text') ?? dataTransfer.get('text/plain');
+		const dataTransferItem = dataTransfer.get('text/plain');
 		if (!dataTransferItem) {
 			return undefined;
 		}
@@ -32,7 +32,7 @@ class ReverseTextOnDropProvider implements vscode.DocumentOnDropEditProvider {
 		// Adding the reversed text
 		snippet.appendText([...text].reverse().join(''));
 
-		return { insertText: snippet };
+		return new vscode.DocumentDropEdit(snippet);
 	}
 }
 
@@ -45,10 +45,10 @@ class ReverseTextOnDropProvider implements vscode.DocumentOnDropEditProvider {
  * - The operating system
  * - The open editors view 
  */
-class FileNameListOnDropProvider implements vscode.DocumentOnDropEditProvider {
-	async provideDocumentOnDropEdits(
+class FileNameListOnDropProvider implements vscode.DocumentDropEditProvider {
+	async provideDocumentDropEdits(
 		_document: vscode.TextDocument,
-		position: vscode.Position,
+		_position: vscode.Position,
 		dataTransfer: vscode.DataTransfer,
 		token: vscode.CancellationToken
 	): Promise<vscode.DocumentDropEdit | undefined> {
@@ -90,7 +90,7 @@ class FileNameListOnDropProvider implements vscode.DocumentOnDropEditProvider {
 			}
 		});
 
-		return { insertText: snippet };
+		return new vscode.DocumentDropEdit(snippet);
 	}
 }
 
@@ -100,6 +100,6 @@ export function activate(context: vscode.ExtensionContext) {
 	const selector: vscode.DocumentSelector = { language: 'plaintext' };
 
 	// Register our providers
-	context.subscriptions.push(vscode.languages.registerDocumentOnDropEditProvider(selector, new ReverseTextOnDropProvider()));
-	context.subscriptions.push(vscode.languages.registerDocumentOnDropEditProvider(selector, new FileNameListOnDropProvider()));
+	context.subscriptions.push(vscode.languages.registerDocumentDropEditProvider(selector, new ReverseTextOnDropProvider()));
+	context.subscriptions.push(vscode.languages.registerDocumentDropEditProvider(selector, new FileNameListOnDropProvider()));
 }
