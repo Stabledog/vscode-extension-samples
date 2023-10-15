@@ -36,7 +36,19 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createAndSend', () => {
 		const terminal = vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`);
 		terminal.sendText("echo 'Sent text immediately after creating'");
+		terminal.show();
 	}));
+	/// --------------------- MY STUFF
+	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createZoo', () => {
+		const terminal = vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`);
+		const options:vscode.TerminalOptions = {
+			name:`Ext Terminal #${NEXT_TERM_ID++}`,
+			shellArgs: ['-c','echo "Hello world"']
+		};
+		vscode.window.createTerminal(options);
+		terminal.show();
+	}));
+	///
 	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createZshLoginShell', () => {
 		vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`, '/bin/zsh', ['-l']);
 	}));

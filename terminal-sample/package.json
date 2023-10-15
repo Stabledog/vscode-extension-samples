@@ -27,6 +27,10 @@
 				"title": "Terminal API: Create Terminal and Immediately Send"
 			},
 			{
+				"command": "terminalTest.createZoo",
+				"title": "Terminal API: Create Terminal with fancy"
+			},
+			{
 				"command": "terminalTest.createTerminal",
 				"title": "Terminal API: Create Terminal"
 			},
