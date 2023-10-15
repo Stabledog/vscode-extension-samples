@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 
-function getChildWorkspaceFolder() : string|undefined {
+function getChildWorkspaceFolder(): string | undefined {
 	const workspaceFolder = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
 	console.log(`workspaceFolder=${workspaceFolder}`);
 	return workspaceFolder ? `${workspaceFolder}` : undefined;
@@ -29,8 +29,8 @@ export function activate(context: vscode.ExtensionContext) {
 	/// --------------------- MY STUFF
 	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createZoo', () => {
 		/* Creating a terminal with custom environment */
-		const options:vscode.TerminalOptions = {
-			name:`Zoobar #${NEXT_TERM_ID++}`,
+		const options: vscode.TerminalOptions = {
+			name: `Zoobar #${NEXT_TERM_ID++}`,
 			cwd: getChildWorkspaceFolder(),
 			shellPath: '/bin/bash',
 			shellArgs: [
@@ -44,8 +44,8 @@ export function activate(context: vscode.ExtensionContext) {
 	}));
 	// vscode.window.createTerminal
 	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createTerminal', () => {
-		const msg=`Ext Terminal #${NEXT_TERM_ID++}`;
-		const term:vscode.Terminal = vscode.window.createTerminal(msg);
+		const msg = `Ext Terminal #${NEXT_TERM_ID++}`;
+		const term: vscode.Terminal = vscode.window.createTerminal(msg);
 		vscode.window.showInformationMessage(`Created ${msg}`);
 		//term.show(false);
 	}));
