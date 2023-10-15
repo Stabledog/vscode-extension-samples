@@ -12,7 +12,7 @@
             "runtimeExecutable": "${execPath}",
             "args": [
                 "--extensionDevelopmentPath=${workspaceFolder}",
-				"/mnt/c/Users/lesma/.ssh"
+				"${workspaceFolder}/test"
             ],
             "outFiles": [
                 "${workspaceFolder}/out/**/*.js"

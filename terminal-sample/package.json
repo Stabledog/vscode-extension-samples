@@ -28,7 +28,7 @@
 			},
 			{
 				"command": "terminalTest.createZoo",
-				"title": "Terminal API: Create Terminal with fancy"
+				"title": "Terminal API: Create Terminal with zoobar"
 			},
 			{
 				"command": "terminalTest.createTerminal",
