@@ -9,26 +9,23 @@ import { showQuickPick, showInputBox } from './basicInput';
 import { multiStepInput } from './multiStepInput';
 import { quickOpen } from './quickOpen';
 
-interface MenuItem extends QuickPickItem {
-    func: (arg:ExtensionContext) => Promise<void>;
-}
+
 
 export function activate(context: ExtensionContext) {
     context.subscriptions.push(commands.registerCommand('samples.quickInput', async () => {
-        const options: MenuItem[] = [
-            { label: "Show quick pick", func: showQuickPick },
-            { label: "Show input box", func: showInputBox },
-            { label: "Multi-step input", func: multiStepInput },
-            { label: "Quick open", func: quickOpen },
+        interface MenuItem extends QuickPickItem {
+            f: (arg:ExtensionContext) => Promise<void>;
+        }
+        const quickPick = window.createQuickPick<MenuItem>();
+        quickPick.items= [
+            { label: "Show quick pick", f: showQuickPick },
+            { label: "Show input box", f: showInputBox },
+            { label: "Multi-step input", f: multiStepInput },
+            { label: "Quick open", f: quickOpen },
         ];
-        const quickPick = window.createQuickPick();
-        //quickPick.items = options.map(opt => ({ label: opt.optName, }));
-        quickPick.items = options;
         quickPick.onDidChangeSelection(selection => {
-            console.log(selection);
             if (selection[0]) {
-                console.log(selection[0]);
-                (selection[0] as MenuItem).func(context)
+                (selection[0] as MenuItem).f(context)
                     .catch(console.error);
             }
         });
