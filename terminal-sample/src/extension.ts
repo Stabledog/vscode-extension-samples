@@ -2,6 +2,12 @@
 
 import * as vscode from 'vscode';
 
+function getChildWorkspaceFolder(): string | undefined {
+	const workspaceFolder = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : null;
+	console.log(`workspaceFolder=${workspaceFolder}`);
+	return workspaceFolder ? `${workspaceFolder}` : undefined;
+}
+
 export function activate(context: vscode.ExtensionContext) {
 	let NEXT_TERM_ID = 1;
 
@@ -20,10 +26,28 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log(`Active terminal changed, name=${e ? e.name : 'undefined'}`);
 	});
 
+	/// --------------------- MY STUFF
+	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createZoo', () => {
+		/* Creating a terminal with custom environment */
+		const options: vscode.TerminalOptions = {
+			name: `Zoobar #${NEXT_TERM_ID++}`,
+			cwd: getChildWorkspaceFolder(),
+			shellPath: '/bin/bash',
+			shellArgs: [
+				'--init-file',
+				`${getChildWorkspaceFolder()}/zoobar.bashrc`
+			]
+		};
+		console.log("Pre-createTerminal");
+		const terminal = vscode.window.createTerminal(options);
+		terminal.show();
+	}));
 	// vscode.window.createTerminal
 	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createTerminal', () => {
-		vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`);
-		vscode.window.showInformationMessage('Hello World 2!');
+		const msg = `Ext Terminal #${NEXT_TERM_ID++}`;
+		const term: vscode.Terminal = vscode.window.createTerminal(msg);
+		vscode.window.showInformationMessage(`Created ${msg}`);
+		//term.show(false);
 	}));
 	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createTerminalHideFromUser', () => {
 		vscode.window.createTerminal({
@@ -34,6 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createAndSend', () => {
 		const terminal = vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`);
 		terminal.sendText("echo 'Sent text immediately after creating'");
+		terminal.show();
 	}));
 	context.subscriptions.push(vscode.commands.registerCommand('terminalTest.createZshLoginShell', () => {
 		vscode.window.createTerminal(`Ext Terminal #${NEXT_TERM_ID++}`, '/bin/zsh', ['-l']);
@@ -84,7 +109,7 @@ export function activate(context: vscode.ExtensionContext) {
 		if (ensureTerminalExists()) {
 			selectTerminal().then(terminal => {
 				if (terminal) {
-					terminal.sendText("echo 'Hello world!'", false);
+					terminal.sendText("history", false);
 				}
 			});
 		}
